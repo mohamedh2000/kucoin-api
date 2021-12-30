@@ -5,6 +5,7 @@ use::crypto::mac::Mac;
 use::base64::{ encode };
 use::reqwest;
 use::serde_json::Value;
+use std::panic::{set_hook};
 use std::{collections::HashMap};
 
 #[derive()]
@@ -17,6 +18,10 @@ struct KucoinCred<'a> {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+
+    set_hook(Box::new(|_| {
+        ();
+    }));
 
     let kucoin_acc_endpoint : &str =  "/api/v1/accounts";
     let kucoin_price_endpoint : &str = "/api/v1/market/orderbook/level1";
@@ -35,7 +40,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let acc_balance: &Vec<Value> = new_res.get("data").unwrap().as_array().unwrap();
 
     for n in 0..acc_balance.len() {
-        //Object({"available": String("502.54391194"), "balance": String("502.54391194"), "currency": String("KDA"), "holds": String("0"), "id": String("6182514dc42972000142f847"), "type": String("trade")})
+
         let current_obj = &acc_balance[n];
         let sym : &str = &current_obj["currency"].as_str().unwrap();
         let balance : &f64 = &current_obj["balance"].as_str().unwrap().parse::<f64>().unwrap();
@@ -45,10 +50,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         let price = get_kucoin_response(&price_endpoint, &current_user).await?;
 
         let price_res = serde_json::from_str::<HashMap<String, Value>>(&price).unwrap();
-        
-        let ticker_price : f64 = price_res.get("data").unwrap()["price"].as_str().unwrap().parse::<f64>().unwrap();
 
-        if *balance != 0.0 { println!("{:.2} {} ({:.2} USD)", balance, sym, ticker_price * balance)};
+        let ticker_price : Result<f64,()> = Ok(price_res.get("data").unwrap()["price"].as_str().unwrap().parse::<f64>().unwrap());
+
+        if *balance != 0.0 && ticker_price.is_ok() { println!("{:.2} {} ({:.2} USD)", balance, sym, ticker_price.unwrap() * balance)};
     }
 
     Ok(())
