@@ -8,11 +8,11 @@ use::serde_json::Value;
 use std::{collections::HashMap};
 
 #[derive()]
-struct KucoinCred<'a> { 
-    kucoin_api_key : &'a str,
-    kucoin_passphrase : &'a str,
-    kucoin_secret : &'a str,
-    kucoin_base_uri : &'a str,
+struct KucoinCred { 
+    kucoin_api_key : String,
+    kucoin_passphrase : String,
+    kucoin_secret : String,
+    kucoin_base_uri : String,
 }
 
 #[tokio::main]
@@ -21,7 +21,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let kucoin_acc_endpoint : &str =  "/api/v1/accounts";
     let kucoin_price_endpoint : &str = "/api/v1/market/orderbook/level1";
 
-    let current_user :KucoinCred = KucoinCred {
+    let current_user : KucoinCred = KucoinCred {
         kucoin_base_uri : "https://api.kucoin.com",
         kucoin_secret : "b96b57e7-8534-4aa0-9a44-61e1666c5e67",
         kucoin_api_key : "61c83393d98e2200016519ea",
