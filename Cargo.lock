@@ -3,18 +3,6 @@
 version = 3
 
 [[package]]
-name = "KucoinBalance"
-version = "0.1.0"
-dependencies = [
- "base64",
- "reqwest",
- "rust-crypto",
- "serde",
- "serde_json",
- "tokio",
-]
-
-[[package]]
 name = "autocfg"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -334,6 +322,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7cc9ffccd38c451a86bf13657df244e9c3f37493cce8e5e21e940963777acc84"
 dependencies = [
  "wasm-bindgen",
+]
+
+[[package]]
+name = "kucoin_api"
+version = "0.1.0"
+dependencies = [
+ "base64",
+ "reqwest",
+ "rust-crypto",
+ "serde",
+ "serde_json",
+ "tokio",
 ]
 
 [[package]]
